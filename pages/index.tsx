@@ -25,7 +25,7 @@ const Home: NextPage = () => {
           </p>
           <p>
             <a
-              href="../public/CVRaphaelPICARD2021-2022.pdf"
+              href="/CVRaphaelPICARD2021-2022.pdf"
               download
               className={styles["space-button"]}
             >
