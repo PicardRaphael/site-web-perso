@@ -1,11 +1,10 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import styles from "../styles/Home.module.scss";
 
 const Home: NextPage = () => {
   return (
     <div className={styles["container"]}>
-      <p className={styles["start"]}>Site en construction</p>
+      <p className={styles["start"]}>👨‍💻 Site en cours de refonte 💪</p>
       <div id={styles["titles"]}>
         <div id={styles["titlecontent"]}>
           <p>Bienvenue sur mon site web !</p>
