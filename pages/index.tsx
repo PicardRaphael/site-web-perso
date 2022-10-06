@@ -11,7 +11,7 @@ const Home: NextPage = () => {
           <p>
             Je m&apos;appelle <strong>Raphaël PICARD</strong>.
           </p>
-          <p>Je suis Développeur Web/Mobile depuis maintenant 6ans.</p>
+          <p>Je suis Développeur Freelance Web/Mobile spécialisé dans ReactJS / NextJS.</p>
           <p>Actuellement mon site est en cours de refonte !</p>
           <p>Vous pouvez cependant avoir accès à mon CV et mon linkedin.</p>
           <p style={{ textAlign: "center" }}>
