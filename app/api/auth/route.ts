@@ -1,20 +1,44 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { userRoleSchema } from '@src/domain/schemas/userSchema';
+import { setUserRoleAction } from '@app/_actions/setUserRoleAction';
+import { ErrorHandler } from '@src/utils/error/ErrorHanlder';
+import { z } from 'zod';
 
-export async function POST(request: Request) {
-  const { role } = await request.json();
+/**
+ * Handles the POST request to set the user role.
+ * @param {Request} request - The incoming HTTP request.
+ * @returns {Promise<NextResponse>} - The HTTP response.
+ */
+export async function POST(request: Request): Promise<NextResponse> {
+  try {
+    // Parse the JSON body from the request
+    const role = await request.json();
+    try {
+      // Validate the role using Zod schema
+      const validatedData = userRoleSchema.parse(role);
 
-  // Simuler un token JWT (ne pas utiliser ceci en production !)
-  const token = role === 'admin' ? 'admin_token' : 'user_token';
+      // Perform the setUserRoleAction with the validated data
+      const result = await setUserRoleAction(validatedData);
 
-  // Définir le cookie
-  cookies().set('auth_token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 3600, // 1 heure
-    path: '/',
-  });
-
-  return NextResponse.json({ success: true });
+      // Check the result and return the appropriate response
+      if (result.success) {
+        return NextResponse.json(result);
+      } else {
+        return NextResponse.json({ error: result.error }, { status: 400 });
+      }
+    } catch (validationError) {
+      // Handle validation errors separately
+      if (validationError instanceof z.ZodError) {
+        return NextResponse.json(ErrorHandler.handleZodError(validationError), {
+          status: 400,
+        });
+      }
+      // Rethrow other validation errors to be caught in the outer catch block
+      throw validationError;
+    }
+  } catch (error: unknown) {
+    // Handle general API errors
+    const errorResponse = ErrorHandler.handleApiError(error);
+    return NextResponse.json(errorResponse, { status: 500 });
+  }
 }

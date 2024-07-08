@@ -2,20 +2,25 @@ import { MiddlewareChain } from '@src/infrastructure/factories/middleware/Middle
 import { MiddlewareFactory } from '@src/infrastructure/factories/middleware/MiddlewareFactory';
 import type { NextRequest } from 'next/server';
 
-// Crée une instance de la factory
+// Create an instance of the factory
 const middlewareFactory = new MiddlewareFactory();
 
-// Utilise la factory pour créer le middleware d'authentification
+// Use the factory to create the authentication middleware
 const authMiddleware = middlewareFactory.createAuthMiddleware();
 
-// Ajoutez d'autres middlewares ici si nécessaire
+// Add other middlewares here if necessary
 const middlewares = [authMiddleware];
 
-// Crée une chaîne de middlewares
+// Create a middleware chain
 const middlewareChain = new MiddlewareChain(middlewares);
 
+/**
+ * Middleware function to handle Next.js requests.
+ * Uses a chain of middlewares to process the request.
+ * @param {NextRequest} request - The Next.js request to handle.
+ * @returns {Promise<NextResponse>} - The Next.js response.
+ */
 export async function middleware(request: NextRequest) {
-  console.log('Request received:', request.nextUrl.pathname);
   return middlewareChain.handle(request);
 }
 

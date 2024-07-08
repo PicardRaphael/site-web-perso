@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Providers } from './providers';
 import '@src/interface/styles/globals.css';
 import Link from 'next/link';
+import { Toaster } from '@src/interface/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -23,6 +24,7 @@ export default function RootLayout({
             </ul>
           </div>
           {children}
+          <Toaster />
         </Providers>
       </body>
     </html>
