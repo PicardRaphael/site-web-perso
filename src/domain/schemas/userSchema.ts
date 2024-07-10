@@ -1,4 +1,4 @@
 import { z } from 'zod';
-import { UserRole } from '@src/constants/userRoles';
+import { UserRole } from '../entities/UserEntity';
 
-export const userRoleSchema = z.enum([UserRole.User, UserRole.Admin]);
+export const userRoleSchema = z.enum([UserRole.USER, UserRole.ADMIN]);

@@ -1,25 +1,25 @@
-import { IUserRepository } from '@src/application/ports/user/IUserRepository';
-import { UserRole } from '@src/constants/userRoles';
-import { ErrorHandler, SuccessResponse } from '@src/utils/error/ErrorHanlder';
+import { IUserRepository } from '@src/domain/repositories/IUserRepository';
 import { cookies } from 'next/headers';
+import { ErrorHandler, SuccessResponse } from '@src/utils/error/ErrorHanlder';
+import { UserRole } from '@src/domain/entities/UserEntity';
 
 export class UserRepository implements IUserRepository {
-  setRoleInCookie(role: UserRole): SuccessResponse<UserRole> {
-    cookies().set('auth_token', role, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 3600, // 1 heure
-      path: '/',
-    });
-    return ErrorHandler.handleSuccess(role);
-  }
-  getRoleByCookie(): Boolean {
+  async getRoleFromCookie(): Promise<Boolean> {
     const token = cookies().get('auth_token')?.value;
-    console.log('token)', token);
     if (token === 'admin') {
       return true;
     }
     return false;
+  }
+
+  async setRoleInCookie(role: UserRole): Promise<SuccessResponse<UserRole>> {
+    cookies().set('auth_token', role, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 3600, // 1 hour
+      path: '/',
+    });
+    return ErrorHandler.handleSuccess(role);
   }
 }

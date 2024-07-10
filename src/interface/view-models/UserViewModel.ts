@@ -1,5 +1,6 @@
-import { UserRole } from '@src/constants/userRoles';
-import { User } from '@src/domain/entities/UserEntitiy';
+//TODO: NOT USING
+// USING IN CONTROLLER
+import { User, UserRole } from '@src/domain/entities/UserEntity';
 
 export class UserViewModel {
   constructor(public role: UserRole) {}

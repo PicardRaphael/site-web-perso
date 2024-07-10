@@ -1,8 +1,9 @@
-import { UserRole } from '@src/constants/userRoles';
+import { rootContainer } from '@src/dependencyInjection/RootContainer';
+import { UserRole } from '@src/domain/entities/UserEntity';
 import { userRoleSchema } from '@src/domain/schemas/userSchema';
-import { UserController } from '@src/interface/controllers/UserController';
 import {
   ErrorHandler,
+  ErrorResponse,
   Response,
   SuccessResponse,
 } from '@src/utils/error/ErrorHanlder';
@@ -14,16 +15,16 @@ import {
  */
 export async function setUserRoleAction(
   role: UserRole
-): Promise<Response<SuccessResponse<UserRole>>> {
+): Promise<Response<SuccessResponse<UserRole> | ErrorResponse>> {
   try {
     // Validate the user role using Zod schema
     const validatedData = userRoleSchema.parse(role);
 
     // Get an instance of UserController
-    const userController = UserController.getInstance();
+    const userController = rootContainer.getUserContainer().getUserController();
 
     // Call the setUserRoleAction method on the UserController
-    const userSetRole = await userController.setUserRoleAction(validatedData);
+    const userSetRole = await userController.setUserRole(validatedData);
 
     // Return a success response
     return ErrorHandler.handleSuccess(userSetRole);

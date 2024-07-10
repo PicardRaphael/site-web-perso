@@ -1,28 +1,18 @@
-import { UserService } from '@src/application/services/UserService';
-import { UserRole } from '@src/constants/userRoles';
+import { UserRole } from '@src/domain/entities/UserEntity';
+import { UserUseCase } from '@src/domain/use-cases/UserUseCase';
+import { ErrorResponse, SuccessResponse } from '@src/utils/error/ErrorHanlder';
 
-/**
- * UserController class handling HTTP requests for user management.
- */
 export class UserController {
-  private static instance: UserController;
-  private userService: UserService;
-  constructor() {
-    const userService = UserService.getInstance();
-    this.userService = userService;
+  constructor(private userUseCase: UserUseCase) {}
+
+  async getUserRole(): Promise<Boolean> {
+    return this.userUseCase.getUserRole();
   }
 
-  async setUserRoleAction(role: UserRole) {
-    const userRole = await this.userService.setUserRoleInCookies(role);
-    return userRole;
-  }
-  async getUserRoleAction() {
-    return await this.userService.getUserRoleFromCookies();
-  }
-  public static getInstance(): UserController {
-    if (!UserController.instance) {
-      UserController.instance = new UserController();
-    }
-    return UserController.instance;
+  async setUserRole(
+    role: UserRole
+  ): Promise<SuccessResponse<UserRole> | ErrorResponse> {
+    const user = await this.userUseCase.setUserRole(role);
+    return user;
   }
 }

@@ -1,6 +1,6 @@
 import type { IMiddleware } from '@src/application/ports/middlewares/IMiddleware';
 import type { IMiddlewareFactory } from '@src/application/ports/middlewares/IMiddlewareFactory ';
-import { AuthMiddleware } from '@src/infrastructure/adapters/middlewares/AuthMiddleware';
+import { AuthMiddleware } from '@src/infrastructure/middlewares/AuthMiddleware';
 
 /**
  * MiddlewareFactory class that implements the IMiddlewareFactory interface.

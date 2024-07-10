@@ -12,11 +12,10 @@ import { z } from 'zod';
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     // Parse the JSON body from the request
-    const role = await request.json();
+    const { role } = await request.json();
     try {
       // Validate the role using Zod schema
       const validatedData = userRoleSchema.parse(role);
-
       // Perform the setUserRoleAction with the validated data
       const result = await setUserRoleAction(validatedData);
 

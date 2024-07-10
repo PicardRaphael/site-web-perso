@@ -1,29 +1,18 @@
-import { UserRole } from '@src/constants/userRoles';
-import type { IUserRepository } from '@src/application/ports/user/IUserRepository';
-import { RequestCookies } from 'next/dist/compiled/@edge-runtime/cookies';
-import { UserRepository } from '@src/infrastructure/adapters/user/UserRepository';
+import { UserRole } from '@src/domain/entities/UserEntity';
+import { IUserRepository } from '@src/domain/repositories/IUserRepository';
+import { UserUseCase } from '@src/domain/use-cases/UserUseCase';
+import { ErrorResponse, SuccessResponse } from '@src/utils/error/ErrorHanlder';
 
-/**
- * UserService class containing business logic for user management.
- */
-export class UserService {
-  private static instance: UserService;
-  private userRepository: IUserRepository;
-  constructor() {
-    const userRepository = new UserRepository();
-    this.userRepository = userRepository;
+export class UserService implements UserUseCase {
+  constructor(private userRepository: IUserRepository) {}
+
+  async getUserRole(): Promise<Boolean> {
+    return this.userRepository.getRoleFromCookie();
   }
 
-  setUserRoleInCookies(role: UserRole) {
+  async setUserRole(
+    role: UserRole
+  ): Promise<SuccessResponse<UserRole> | ErrorResponse> {
     return this.userRepository.setRoleInCookie(role);
-  }
-  getUserRoleFromCookies() {
-    return this.userRepository.getRoleByCookie();
-  }
-  public static getInstance(): UserService {
-    if (!UserService.instance) {
-      UserService.instance = new UserService();
-    }
-    return UserService.instance;
   }
 }

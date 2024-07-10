@@ -1,6 +1,10 @@
-import { UserRole } from '@src/constants/userRoles';
-import { setUserRole } from '@src/infrastructure/api/setUserRole';
-import { ErrorHandler, Response } from '@src/utils/error/ErrorHanlder';
+import { UserRole } from '@src/domain/entities/UserEntity';
+import { setUserRole } from '@src/interface/routes/userRoutes';
+import {
+  ErrorHandler,
+  Response,
+  SuccessResponse,
+} from '@src/utils/error/ErrorHanlder';
 import { ToastHandler } from '@src/utils/error/ToastHandler';
 import {
   useMutation,
@@ -9,7 +13,7 @@ import {
 } from '@tanstack/react-query';
 
 export function useCreateRoleUser(): UseMutationResult<
-  Response<UserRole>,
+  SuccessResponse<UserRole>,
   Error,
   UserRole
 > {
