@@ -17,7 +17,7 @@ describe('MiddlewareChain', () => {
 
   it('should initialize with a list of middlewares and generate matchers', () => {
     const mockMiddleware1 = createMockMiddleware(['/dashboard']);
-    const mockMiddleware2 = createMockMiddleware(['/profile']);
+    const mockMiddleware2 = createMockMiddleware('/profile');
     middlewareChain = new MiddlewareChain([mockMiddleware1, mockMiddleware2]);
 
     expect(middlewareChain.matcher).toEqual(['/dashboard', '/profile']);
@@ -59,6 +59,26 @@ describe('MiddlewareChain', () => {
     const response = await middlewareChain.handle(mockRequest as NextRequest);
 
     expect(mockMiddleware.handle).not.toHaveBeenCalled();
+    expect(response).toBe(mockResponse);
+  });
+
+  it('should handle matcher as string', async () => {
+    const mockMiddleware = createMockMiddleware('/dashboard');
+    middlewareChain = new MiddlewareChain([mockMiddleware]);
+
+    const response = await middlewareChain.handle(mockRequest as NextRequest);
+
+    expect(mockMiddleware.handle).toHaveBeenCalledWith(mockRequest);
+    expect(response).toBe(mockResponse);
+  });
+
+  it('should handle matcher as array', async () => {
+    const mockMiddleware = createMockMiddleware(['/dashboard', '/profile']);
+    middlewareChain = new MiddlewareChain([mockMiddleware]);
+
+    const response = await middlewareChain.handle(mockRequest as NextRequest);
+
+    expect(mockMiddleware.handle).toHaveBeenCalledWith(mockRequest);
     expect(response).toBe(mockResponse);
   });
 });

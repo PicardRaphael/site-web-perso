@@ -4,7 +4,6 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   setupFiles: ['./jest.polyfills.js'],
-  setupFilesAfterEnv: [],
   moduleNameMapper: {
     '^@app/(.*)$': '<rootDir>/app/$1',
     '^@src/(.*)$': '<rootDir>/src/$1',
