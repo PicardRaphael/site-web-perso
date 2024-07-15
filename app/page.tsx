@@ -6,7 +6,6 @@ export default function Home() {
   const createRoleUser = useCreateRoleUser();
   const handleCreate = async (role: UserRole) => {
     const result = await createRoleUser.mutateAsync(role);
-    console.log(result);
     return result;
   };
 

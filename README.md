@@ -1,8 +1,8 @@
-# Architecture du Projet NextJS
+# Project Architecture for NextJS
 
-Ce projet suit une architecture hexagonale (ou en oignon) adaptée à NextJS, avec une séparation claire des préoccupations et une structure modulaire.
+This project follows a hexagonal (or onion) architecture adapted for NextJS, with a clear separation of concerns and a modular structure.
 
-## Structure du Projet
+## Project Structure
 
 ```
 .
@@ -14,6 +14,10 @@ Ce projet suit une architecture hexagonale (ou en oignon) adaptée à NextJS, av
 │   ├── layout.tsx
 │   └── page.tsx
 ├── src/
+│   ├── __mocks__/
+│   │   ├── helpers/
+│   │   │   ├── server.ts
+│   │   │   └── setupTests.ts
 │   ├── application/
 │   │   ├── ports/
 │   │   │   └── user/
@@ -64,83 +68,83 @@ Ce projet suit une architecture hexagonale (ou en oignon) adaptée à NextJS, av
 └── middleware.ts
 ```
 
-## Couches de l'Architecture
+## Architecture Layers
 
 ### 1. Domain
 
-La couche domaine contient les entités métier, les interfaces des repositories, les schémas de validation et les cas d'utilisation.
+The domain layer contains business entities, repository interfaces, validation schemas, and use cases.
 
-- `entities/`: Définitions des entités métier (ex: UserEntity.ts)
-- `repositories/`: Interfaces des repositories (ex: IUserRepository.ts)
-- `schemas/`: Schémas de validation Zod (ex: userSchema.ts)
-- `use-cases/`: Définitions des cas d'utilisation (ex: UserUseCase.ts)
+- `entities/`: Business entity definitions (e.g., `UserEntity.ts`)
+- `repositories/`: Repository interfaces (e.g., `IUserRepository.ts`)
+- `schemas/`: Zod validation schemas (e.g., `userSchema.ts`)
+- `use-cases/`: Use case definitions (e.g., `UserUseCase.ts`)
 
 ### 2. Application
 
-La couche application contient la logique métier et les services.
+The application layer contains business logic and services.
 
-- `ports/`: Interfaces pour les contrôleurs et services
-- `services/`: Implémentations des services métier
+- `ports/`: Interfaces for controllers and services
+- `services/`: Business service implementations
 
 ### 3. Infrastructure
 
-La couche infrastructure gère les détails techniques comme la persistance des données et les middlewares.
+The infrastructure layer manages technical details such as data persistence and middleware.
 
-- `adapters/`: Implémentations concrètes des repositories
-- `factories/`: Factories pour la création de middlewares
-- `middlewares/`: Définitions des middlewares
+- `adapters/`: Concrete repository implementations
+- `factories/`: Middleware creation factories
+- `middlewares/`: Middleware definitions
 
 ### 4. Interface
 
-La couche interface gère l'interaction avec l'utilisateur et la présentation.
+The interface layer handles user interaction and presentation.
 
-- `components/`: Composants React réutilisables
-- `controllers/`: Contrôleurs pour gérer les requêtes
-- `hooks/`: Hooks React personnalisés
-- `routes/`: Définitions des routes API
-- `state/`: Gérera l'état global de l'application avec Zustand
-- `view-models/`: Modèles de vue pour la présentation des données
+- `components/`: Reusable React components
+- `controllers/`: Controllers to manage requests
+- `hooks/`: Custom React hooks
+- `routes/`: API route definitions
+- `state/`: Global application state management with Zustand
+- `view-models/`: View models for data presentation
 
 ### 5. Dependency Injection
 
-Gestion de l'injection des dépendances pour découpler les composants.
+Manages dependency injection to decouple components.
 
-- `user/`: Conteneurs spécifiques aux utilisateurs
-- `rootContainer.ts`: Conteneur racine pour l'application
+- `user/`: User-specific containers
+- `rootContainer.ts`: Root container for the application
 
 ### 6. Utils
 
-Utilitaires et helpers pour l'application.
+Utilities and helpers for the application.
 
-- `error/`: Gestion des erreurs et des toasts
+- `error/`: Error and toast handling
 
 ### 7. App
 
-Dossier spécifique à NextJS pour les pages et les composants de l'application.
+NextJS-specific folder for pages and application components.
 
-- `api/`: Routes API de NextJS
-- `_actions/`: Actions serveur pour les formulaires et les mutations
-- `_components/`: Composants spécifiques aux pages
-- `layout.tsx`: Layout principal de l'application
-- `page.tsx`: Page principale de l'application
+- `api/`: NextJS API routes
+- `_actions/`: Server actions for forms and mutations
+- `_components/`: Page-specific components
+- `layout.tsx`: Main application layout
+- `page.tsx`: Main application page
 
-## Conventions de Nommage
+## Naming Conventions
 
-- **Fichiers**: Utilisez le PascalCase pour les classes et les interfaces (ex: `UserEntity.ts`, `IUserRepository.ts`) et le kebab-case pour les autres fichiers (ex: `user-schema.ts`).
-- **Classes**: Utilisez le PascalCase (ex: `class UserController {}`).
-- **Interfaces**: Préfixez avec "I" et utilisez le PascalCase (ex: `interface IUserService {}`).
-- **Méthodes et Variables**: Utilisez le camelCase (ex: `getUserById()`, `currentUser`).
-- **Constantes**: Utilisez le SNAKE_CASE en majuscules (ex: `const MAX_USERS = 100`).
+- **Files**: Use PascalCase for classes and interfaces (e.g., `UserEntity.ts`, `IUserRepository.ts`) and kebab-case for other files (e.g., `user-schema.ts`).
+- **Classes**: Use PascalCase (e.g., `class UserController {}`).
+- **Interfaces**: Prefix with "I" and use PascalCase (e.g., `interface IUserService {}`).
+- **Methods and Variables**: Use camelCase (e.g., `getUserById()`, `currentUser`).
+- **Constants**: Use uppercase SNAKE_CASE (e.g., `const MAX_USERS = 100`).
 
-## Gestion d'État avec Zustand
+## State Management with Zustand
 
-Pour intégrer Zustand dans cette architecture :
+To integrate Zustand into this architecture:
 
-1. Créez un nouveau dossier `src/interface/state/` pour les stores Zustand.
-2. Implémentez vos stores dans ce dossier (ex: `userStore.ts`).
-3. Utilisez les stores dans vos composants et hooks React.
+1. Create a new `src/interface/state/` folder for Zustand stores.
+2. Implement your stores in this folder (e.g., `userStore.ts`).
+3. Use the stores in your React components and hooks.
 
-Exemple de structure pour un store Zustand :
+Example structure for a Zustand store:
 
 ```typescript
 // src/interface/state/userStore.ts
@@ -158,66 +162,68 @@ export const useUserStore = create<UserState>((set) => ({
 }));
 ```
 
-## Flux Typique d'une Requête
+## Typical Request Flow
 
-Voici comment une requête typique traverse les différentes couches de l'architecture :
+Here's how a typical request flows through the different layers of the architecture:
 
-Entrée de la requête :
-Une requête arrive via une route API dans app/api/ ou une action serveur dans app/\_actions/.
+### Request Entry
 
-Couche Interface :
-La route ou l'action utilise un contrôleur de la couche Interface (ex: UserController).
-Le contrôleur peut utiliser un view-model pour formater les données d'entrée si nécessaire.
+A request arrives via an API route in `app/api/` or a server action in `app/_actions/`.
 
-Couche Application :
-Le contrôleur appelle un service de la couche Application (ex: UserService).
-Le service implémente la logique métier en utilisant les cas d'utilisation du Domaine.
+### Interface Layer
 
-Couche Domaine :
-Le service utilise les entités, les cas d'utilisation et les interfaces des repositories définis dans le Domaine.
-Les règles métier sont appliquées à ce niveau.
+The route or action uses a controller from the Interface layer (e.g., `UserController`). The controller may use a view model to format input data if necessary.
 
-Couche Infrastructure :
-Les données sont récupérées ou modifiées via les adaptateurs de l'Infrastructure (ex: UserRepository).
-Ces adaptateurs implémentent les interfaces de repository définies dans le Domaine.
+### Application Layer
 
-Remontée des résultats :
-Les résultats remontent la chaîne, passant par le service, puis le contrôleur.
-Les données peuvent être transformées par des view-models pour les adapter à la présentation.
+The controller calls a service from the Application layer (e.g., `UserService`). The service implements business logic using use cases from the Domain.
 
-Réponse :
-La réponse formatée est renvoyée au client.
+### Domain Layer
 
-Gestion de l'état côté client (si applicable) :
-Pour les interactions côté client, les hooks React (ex: useCreateRoleUser) peuvent être utilisés pour déclencher des actions.
-L'état global géré par Zustand (src/interface/state/userStore.ts) peut être mis à jour avec les nouvelles données.
+The service uses entities, use cases, and repository interfaces defined in the Domain. Business rules are applied at this level.
 
-Ce flux assure une séparation claire des responsabilités et permet une grande flexibilité et testabilité à chaque étape du processus.
+### Infrastructure Layer
 
-## Ajout de Nouvelles Entités
+Data is retrieved or modified via adapters in the Infrastructure (e.g., `UserRepository`). These adapters implement the repository interfaces defined in the Domain.
 
-Pour ajouter une nouvelle entité à l'architecture :
+### Result Propagation
 
-1. Créez l'entité dans `src/domain/entities/`.
-2. Définissez l'interface du repository dans `src/domain/repositories/`.
-3. Créez le schéma Zod dans `src/domain/schemas/`.
-4. Implémentez le use case dans `src/domain/use-cases/`.
-5. Créez le service dans `src/application/services/`.
-6. Implémentez le repository dans `src/infrastructure/adapters/`.
-7. Créez le contrôleur dans `src/interface/controllers/`.
-8. Définissez le view model dans `src/interface/view-models/`.
-9. Ajoutez les routes nécessaires dans `src/interface/routes/`.
-10. Créez les hooks React nécessaires dans `src/interface/hooks/`.
-11. Mettez à jour le conteneur d'injection de dépendances dans `src/dependencyInjection/`.
+Results propagate back up the chain, through the service and then the controller. Data can be transformed by view models to adapt to the presentation.
 
-## Tests
+### Response
 
-Ajoutez des tests unitaires et d'intégration pour chaque couche de l'architecture. Utilisez Jest et React Testing Library pour les tests.
+The formatted response is sent back to the client.
+
+### Client-side State Management (if applicable)
+
+For client-side interactions, React hooks (e.g., `useCreateRoleUser`) can be used to trigger actions. Global state managed by Zustand (`src/interface/state/userStore.ts`) can be updated with the new data.
+
+This flow ensures a clear separation of responsibilities and allows for great flexibility and testability at each stage of the process.
+
+## Adding New Entities
+
+To add a new entity to the architecture:
+
+1. Create the entity in `src/domain/entities/`.
+2. Define the repository interface in `src/domain/repositories/`.
+3. Create the Zod schema in `src/domain/schemas/`.
+4. Implement the use case in `src/domain/use-cases/`.
+5. Create the service in `src/application/services/`.
+6. Implement the repository in `src/infrastructure/adapters/`.
+7. Create the controller in `src/interface/controllers/`.
+8. Define the view model in `src/interface/view-models/`.
+9. Add the necessary routes in `src/interface/routes/`.
+10. Create the necessary React hooks in `src/interface/hooks/`.
+11. Update the dependency injection container in `src/dependencyInjection/`.
+
+## Testing
+
+Add unit and integration tests for each layer of the architecture. Use Jest, Msw, and React Testing Library for testing.
 
 ## Documentation
 
-Documentez chaque module, classe et fonction importante. Utilisez JSDoc pour la documentation inline.
+Document each module, class, and important function. Use JSDoc for inline documentation.
 
 ## Contribution
 
-Suivez les conventions de nommage et la structure du projet lors de l'ajout de nouvelles fonctionnalités. Assurez-vous de mettre à jour la documentation si nécessaire.
+Follow naming conventions and project structure when adding new features. Ensure to update the documentation if necessary.
